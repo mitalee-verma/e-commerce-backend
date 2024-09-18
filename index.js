@@ -36,12 +36,15 @@ const upload = multer({storage:storage})
 
 app.use('/images',express.static('upload/images'))
 
-app.post("/upload",upload.single('product'),(req,res)=>{
+app.post("/upload", upload.single('product'), (req, res) => {
+    const host = req.get('host');  // Get the host from the request
+    const protocol = req.protocol; // Get the protocol (http/https)
     res.json({
-        success:1,
-        image_url:`http://localhost:${port}/images/${req.file.filename}`
-    })  
-})
+        success: 1,
+        image_url: `${protocol}://${host}/images/${req.file.filename}`  // Dynamic URL
+    });
+});
+
 
 //Schema for Creating Products
 
