@@ -17,7 +17,12 @@ app.use(express.json());
 //     'https://master--shopsyadmin.netlify.app', // Admin panel
 // ];
   
-app.use(cors({ origin: '*' }));
+// app.use(cors({ origin: '*' }));
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 // app.options('*', cors()); // Enable pre-flight requests for all routes
 
 //Database Connection with MongoDB
