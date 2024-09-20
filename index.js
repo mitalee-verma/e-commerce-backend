@@ -11,22 +11,13 @@ const { loadavg } = require("os");
 
 app.use(express.json());
 
-const allowedOrigins = [
-    'http://localhost:5173', // For local development
-    'https://shopsy-mitalee.netlify.app', // Main application
-    'https://master--shopsyadmin.netlify.app', // Admin panel
-];
+// const allowedOrigins = [
+//     'http://localhost:5173', // For local development
+//     'https://shopsy-mitalee.netlify.app', // Main application
+//     'https://master--shopsyadmin.netlify.app', // Admin panel
+// ];
   
-app.use(cors({
-    origin: function (origin, callback) {
-      // Allow requests with no origin (like mobile apps or curl requests)
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-  }));
+app.use(cors({ origin: '*' }));
 
 //Database Connection with MongoDB
 mongoose.connect("mongodb+srv://mitaleeverma763:Mitalee%40123@cluster0.0oysx.mongodb.net/e-commerce");
