@@ -18,6 +18,7 @@ app.use(express.json());
 // ];
   
 app.use(cors({ origin: '*' }));
+app.options('*', cors()); // Enable pre-flight requests for all routes
 
 //Database Connection with MongoDB
 mongoose.connect("mongodb+srv://mitaleeverma763:Mitalee%40123@cluster0.0oysx.mongodb.net/e-commerce");
