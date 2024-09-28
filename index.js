@@ -11,19 +11,24 @@ const { loadavg } = require("os");
 
 app.use(express.json());
 
-// const allowedOrigins = [
-//     'http://localhost:5173', // For local development
-//     'https://shopsy-mitalee.netlify.app', // Main application
-//     'https://master--shopsyadmin.netlify.app', // Admin panel
-// ];
-  
-// app.use(cors({ origin: '*' }));
-app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
-// app.options('*', cors()); // Enable pre-flight requests for all routes
+const allowedOrigins = [
+    'http://localhost:3000', // Main frontend (local)
+    'http://localhost:5173', // Admin panel (local)
+    'https://shopsy-mitalee.netlify.app', // Main application
+    'https://master--shopsyadmin.netlify.app', // Admin panel
+];
+
+// Enable CORS with options
+app.use(cors({
+    origin: "*",
+    methods: "GET,POST,PUT,DELETE",
+    allowedHeaders: "Content-Type,auth-token",
+    credentials: true
+}));
+
+// Enable pre-flight for all routes
+app.options('*', cors());
+
 
 //Database Connection with MongoDB
 mongoose.connect("mongodb+srv://mitaleeverma763:Mitalee%40123@cluster0.0oysx.mongodb.net/e-commerce");
@@ -96,34 +101,38 @@ const Product = mongoose.model("Product",{
     },
 })
 
-app.post('/addproduct',async (req,res)=>{
+app.post('/addproduct', async (req, res) => {
+    console.log(req.body);
+
     let products = await Product.find({});
     let id;
-    if(products.length>0)
-    {
+    if (products.length > 0) {
         let last_product_array = products.slice(-1);
         let last_product = last_product_array[0];
-        id = last_product.id+1;
+        id = last_product.id + 1;
+    } else {
+        id = 1;
     }
-    else{
-        id=1;
-    }
+
     const product = new Product({
-        id:id,
-        name:req.body.name,
-        image:req.body.image,
-        category:req.body.category,
-        new_price:req.body.new_price,
-        old_price:req.body.old_price,
+        id: id,
+        name: req.body.name,
+        image: req.body.image,
+        category: req.body.category,
+        new_price: req.body.new_price,
+        old_price: req.body.old_price,
     });
+    
     console.log(product);
+
     await product.save();
     console.log("Saved");
     res.json({
-        success:true,
-        name:req.body.name,
-    })
-})
+        success: true,
+        name: req.body.name,
+    });
+});
+
 
 //Creating API for Deleting Products
 
